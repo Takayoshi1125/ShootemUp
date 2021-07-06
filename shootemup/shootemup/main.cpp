@@ -1,5 +1,6 @@
 #include<DxLib.h>
 #include<cmath>
+#include<memory>
 #include"Geometry.h"
 
 ///“–‚½‚è”»’èŠÖ”
@@ -11,6 +12,7 @@ bool IsHit(const Position2& posA, float radiusA, const Position2& posB,  float r
 	//“–‚½‚è”»’è‚ğÀ‘•‚µ‚Ä‚­‚¾‚³‚¢
 	return false;
 }
+using namespace std;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ChangeWindowMode(true);
@@ -55,6 +57,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	unsigned int frame = 0;//ƒtƒŒ[ƒ€ŠÇ——p
 
 	char keystate[256];
+	char lastkeystate[256];
 	bool isDebugMode = false;
 	int skyy = 0;
 	int skyy2 = 0;
@@ -152,6 +155,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		++frame;
 		ScreenFlip();
+		copy(begin(keystate), end(keystate), begin(lastkeystate)));
 	}
 
 	DxLib_End();

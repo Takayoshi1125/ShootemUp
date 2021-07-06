@@ -21,7 +21,7 @@ Vector2::operator*=(float scale) {
 
 Vector2
 Vector2::operator*(float scale) {
-	return { x*scale,y*scale };
+	return Vector2{ x*scale,y*scale };
 }
 
 Vector2 operator+(const Vector2& va, const Vector2 vb) {
@@ -31,6 +31,17 @@ Vector2 operator+(const Vector2& va, const Vector2 vb) {
 Vector2 operator-(const Vector2& va, const Vector2 vb){
 	return { va.x - vb.x,va.y - vb.y };
 }
+
+Vector2 operator*(const Vector2& lval, float scale)
+{
+	return{ lval.x * scale,lval.y * scale };
+}
+
+Vector2 operator/(const Vector2& lval, float div)
+{
+	return{ lval.x / div,lval.y / div };
+}
+
 
 float
 Vector2::Magnitude()const {

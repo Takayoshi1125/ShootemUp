@@ -32,6 +32,8 @@ struct Vector2 {
 
 Vector2 operator+(const Vector2& va, const Vector2 vb);
 Vector2 operator-(const Vector2& va, const Vector2 vb);
+Vector2 operator*(const Vector2& lval, float scale);
+Vector2 operator/(const Vector2& lval, float div);
 
 ///ì‡êœÇï‘Ç∑
 float Dot(const Vector2& va, const Vector2& vb);
