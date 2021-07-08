@@ -83,7 +83,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 
 		//ÉvÉåÉCÉÑÅ[
-		if (keystate[KEY_INPUT_RIGHT]) {
+		if (keystate[KEY_INPUT_RIGHT]/*&&lastkeystate[]*/) {
 			playerpos.x = min(640,playerpos.x+4);
 		}
 		else if (keystate[KEY_INPUT_LEFT]) {
@@ -155,7 +155,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 		++frame;
 		ScreenFlip();
-		copy(begin(keystate), end(keystate), begin(lastkeystate)));
+		copy(begin(keystate), end(keystate), begin(lastkeystate));
 	}
 
 	DxLib_End();
