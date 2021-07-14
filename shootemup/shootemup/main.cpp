@@ -1,5 +1,6 @@
 #include<DxLib.h>
 #include<cmath>
+#include<vector>
 #include<memory>
 #include"Geometry.h"
 
@@ -10,7 +11,7 @@
 ///@param radiusB B‚Ì”¼Œa
 bool IsHit(const Position2& posA, float radiusA, const Position2& posB,  float radiusB) {
 	//“–‚½‚è”»’è‚ðŽÀ‘•‚µ‚Ä‚­‚¾‚³‚¢
-	return false;
+	return (posA-posB).Magnitude()<=radiusA+radiusB;
 }
 using namespace std;
 
@@ -54,14 +55,19 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Position2 enemypos(320,25);//“GÀ•W
 	Position2 playerpos(320, 400);//Ž©‹@À•W
 
+	//Ž©‹@’e
+	Bullet shots[8] = {};
+
 	unsigned int frame = 0;//ƒtƒŒ[ƒ€ŠÇ——p
 
-	char keystate[256];
-	char lastkeystate[256];
+	char keystate[256] = {};
+	char lastkeystate[256] = {};
 	bool isDebugMode = false;
 	int skyy = 0;
 	int skyy2 = 0;
 	int bgidx = 0;
+	constexpr float player_shot_speed = 8.0f;
+
 	while (ProcessMessage() == 0) {
 		ClearDrawScreen();
 
@@ -94,6 +100,64 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}else if (keystate[KEY_INPUT_DOWN]) {
 			playerpos.y = min(480,playerpos.y+4);
 		}
+
+		if (keystate[KEY_INPUT_Z]&&!lastkeystate[KEY_INPUT_Z])
+		{
+			//’e‚ÌXVE•`‰æ
+			for (auto& shot : shots)
+			{
+				if (!shot.isActive)
+				{
+					bool isRight = rand() % 2;
+					shot.pos = playerpos;
+					shot.vel = isRight ? Vector2(player_shot_speed, 0.0) :
+						Vector2(-player_shot_speed, 0.0);
+					shot.isActive = true;
+					break;
+				}
+			}
+		}
+
+		//’e‚ÌXVE•`‰æ
+		for (auto& shot : shots)
+		{
+			if (shot.isActive)
+			{
+				//“G‘_‚¢‚É
+				constexpr bool isSimple = false;
+
+				if (isSimple)
+				{
+					shot.vel = shot.vel + (enemypos - shot.pos).Normalized();
+					shot.vel = shot.vel.Normalized() * player_shot_speed;
+				}
+				else
+				{
+					auto nShotvel = shot.vel.Normalized();
+					auto nToEnemyVec = (enemypos - shot.pos).Normalized();
+
+					float dot = Dot(nShotvel, nToEnemyVec);
+					float c = acos(dot);
+					float cross = Cross(nShotvel, nToEnemyVec);
+				}
+
+				shot.pos += shot.vel;
+				DrawCircleAA(shot.pos.x, shot.pos.y,
+					5.0f, 16, 0xff0000);
+
+				if (shot.pos.x < -10 || 650 < shot.pos.x ||
+					shot.pos.y < -10 || 490 < shot.pos.y)
+				{
+					shot.isActive = false;
+				}
+				if (IsHit(shot.pos, 5.0f,enemypos,3))
+				{
+					shot.isActive = false;
+				}
+
+			}
+		}
+		DrawCircleAA(enemypos.x, enemypos.y,30.0f,16, 0x0000ff, false,3.0f);
 
 		int pidx = (frame/4 % 2)*5+3;
 		DrawRotaGraph(playerpos.x, playerpos.y, 2.0f, 0.0f, playerH[pidx], true);
