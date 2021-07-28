@@ -2,7 +2,8 @@
 #include<cmath>
 #include<vector>
 #include<memory>
-#include"Geometry.h"
+#include"HomingShot.h"
+
 
 ///“–‚½‚è”»’èŠÖ”
 ///@param posA A‚ÌÀ•W
@@ -37,11 +38,11 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int enemyH[2];
 	LoadDivGraph("img/enemy.png", 2, 2, 1, 32, 32, enemyH);
 
-	struct Bullet {
-		Position2 pos;//À•W
-		Vector2 vel;//‘¬“x
-		bool isActive = false;//¶‚«‚Ä‚é‚©`H
-	};
+	//struct Bullet {
+	//	Position2 pos;//À•W
+	//	Vector2 vel;//‘¬“x
+	//	bool isActive = false;//¶‚«‚Ä‚é‚©`H
+	//};
 
 	//’e‚Ì”¼Œa
 	float bulletRadius = 5.0f;
@@ -51,6 +52,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	//“K“–‚É256ŒÂ‚­‚ç‚¢ì‚Á‚Æ‚­
 	Bullet bullets[256];
+
+	HomingShot homingShots[16] = {};
 
 	Position2 enemypos(320,25);//“GÀ•W
 	Position2 playerpos(320, 400);//Ž©‹@À•W
@@ -103,56 +106,81 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 		if (keystate[KEY_INPUT_Z]&&!lastkeystate[KEY_INPUT_Z])
 		{
-			//’e‚ÌXVE•`‰æ
-			for (auto& shot : shots)
+			//’e”­ŽË
+			int count = 0;
+			for (auto& hs : homingShots)
 			{
-				if (!shot.isActive)
+				if (!hs.isActive)
 				{
+					hs.isActive = true;
 					bool isRight = rand() % 2;
-					shot.pos = playerpos;
-					shot.vel = isRight ? Vector2(player_shot_speed, 0.0) :
+					hs.pos = playerpos;
+					hs.vel = isRight ? Vector2(player_shot_speed, 0.0) :
 						Vector2(-player_shot_speed, 0.0);
-					shot.isActive = true;
+					hs.trail.Clear();
+
+					//Vector2(count==0?1.0f:-1.0f)
+					if (++count > 1)
+					{
+						break;
+					}
 					break;
 				}
 			}
 		}
 
 		//’e‚ÌXVE•`‰æ
-		for (auto& shot : shots)
+		for (auto& hshot : homingShots)
 		{
-			if (shot.isActive)
+			if (!hshot.isActive)continue;
 			{
 				//“G‘_‚¢‚É
-				constexpr bool isSimple = false;
+				constexpr bool isSimple = true;
+
+				if (frame % 2 == 0)
+				{
+					hshot.trail.Update();
+				}
+				hshot.pos += hshot.vel;
+
+				hshot.trail.Draw();
 
 				if (isSimple)
 				{
-					shot.vel = shot.vel + (enemypos - shot.pos).Normalized();
-					shot.vel = shot.vel.Normalized() * player_shot_speed;
+					hshot.vel = hshot.vel + (enemypos - hshot.pos).Normalized();
+					hshot.vel = hshot.vel.Normalized() * player_shot_speed;
+					/*auto nVelocity  =shot.vel.Normalized();
+					auto nTarget = (enemypos - shot.pos).Normalized();
+					auto dot = Dot(nVelocity, nTarget);
+					auto cross = Cross(nVelocity, nTarget);
+					auto angle = acos(dot);
+					angle = std::fminf(angle, DX_PI_F / 24.0f);
+					angle = cross >= 0.0f ? angle : -angle;
+					angle = atan2(nVelocity.y, nVelocity.x) + angle;
+
+					shot.vel = Vector2(cosf(angle), sinf(angle)) * player_shot_speed;*/
 				}
 				else
 				{
-					auto nShotvel = shot.vel.Normalized();
-					auto nToEnemyVec = (enemypos - shot.pos).Normalized();
+					auto nShotvel = hshot.vel.Normalized();
+					auto nToEnemyVec = (enemypos - hshot.pos).Normalized();
 
 					float dot = Dot(nShotvel, nToEnemyVec);
 					float c = acos(dot);
 					float cross = Cross(nShotvel, nToEnemyVec);
 				}
 
-				shot.pos += shot.vel;
-				DrawCircleAA(shot.pos.x, shot.pos.y,
+				DrawCircleAA(hshot.pos.x, hshot.pos.y,
 					5.0f, 16, 0xff0000);
 
-				if (shot.pos.x < -10 || 650 < shot.pos.x ||
-					shot.pos.y < -10 || 490 < shot.pos.y)
+				if (hshot.pos.x < -10 || 650 < hshot.pos.x ||
+					hshot.pos.y < -10 || 490 < hshot.pos.y)
 				{
-					shot.isActive = false;
+					hshot.isActive = false;
 				}
-				if (IsHit(shot.pos, 5.0f,enemypos,3))
+				if (IsHit(hshot.pos, 5.0f,enemypos,3))
 				{
-					shot.isActive = false;
+					hshot.isActive = false;
 				}
 
 			}
