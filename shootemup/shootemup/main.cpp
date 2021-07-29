@@ -18,7 +18,7 @@ using namespace std;
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	ChangeWindowMode(true);
-	SetMainWindowText("’e–‹‚¾‚æ`");
+	SetMainWindowText("1916003_Î‹´—Y‹M");
 	if (DxLib_Init() != 0) {
 		return -1;
 	}
