@@ -2,4 +2,5 @@
 
 HomingShot::HomingShot():trail(*this)
 {
+
 }

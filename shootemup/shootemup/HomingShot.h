@@ -10,6 +10,6 @@ struct Bullet {
 struct HomingShot :public Bullet
 {
 	HomingShot();
-	Trail trail;
+	Trail trail;//ŠïÕ
 };
 

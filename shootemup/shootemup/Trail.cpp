@@ -8,6 +8,11 @@ Trail::Trail(HomingShot& owner):owner_(owner)
 {
 }
 
+void Trail::SetHandle(int handle)
+{
+	handle;
+}
+
 void Trail::Update(void)
 {
 	history_.push_front(owner_.pos);
@@ -23,9 +28,10 @@ void Trail::Draw(void)
 	auto lastPos = owner_.pos;
 	for (const auto& pos : history_)
 	{
+		//if (pos ==lastPos)continue;
 		DrawLineAA(lastPos.x, lastPos.y,
 			pos.x, pos.y, 0xffffff, thickness);
-		thickness *= 0.95f;
+		thickness *= 0.90f;
 		lastPos = pos;
 	}
 }

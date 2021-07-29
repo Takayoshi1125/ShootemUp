@@ -54,6 +54,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Bullet bullets[256];
 
 	HomingShot homingShots[16] = {};
+	//for(auto)
 
 	Position2 enemypos(320,25);//ìGç¿ïW
 	Position2 playerpos(320, 400);//é©ã@ç¿ïW
