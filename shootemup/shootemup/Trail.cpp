@@ -4,8 +4,10 @@
 
 constexpr size_t history_limit = 20;
 
-Trail::Trail(HomingShot& owner):owner_(owner)
+Trail::Trail(HomingShot& owner):
+	owner_(owner)
 {
+
 }
 
 void Trail::SetHandle(int handle)
