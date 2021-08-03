@@ -32,6 +32,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	int sky2H = LoadGraph("img/sky2.png");
 
 	auto bulletH=LoadGraph("img/bullet.png");
+
+	auto arrow = LoadGraph("img/arrow_short.png");
+
 	int playerH[10];
 	LoadDivGraph("img/player.png", 10, 5, 2, 16, 24,playerH );
 
@@ -54,7 +57,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Bullet bullets[256];
 
 	HomingShot homingShots[16] = {};
-	//for(auto)
+	for (auto& shot : homingShots)
+	{
+		shot.trail.SetHandle(arrow);
+	}
 
 	Position2 enemypos(320,25);//ìGç¿ïW
 	Position2 playerpos(320, 400);//é©ã@ç¿ïW

@@ -28,6 +28,7 @@ struct Vector2 {
 	Vector2 operator-() {
 		return Vector2(-x, -y);
 	}
+	bool operator==(const Vector2& val)const;
 };
 
 Vector2 operator+(const Vector2& va, const Vector2 vb);

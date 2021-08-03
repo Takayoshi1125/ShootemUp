@@ -7,10 +7,11 @@ struct HomingShot;
 class Trail
 {
 private:
-	HomingShot& owner_;
+	int handle_;
+	const HomingShot& owner_;
 	std::list<Position2>history_;
 public:
-	Trail(HomingShot& owner);
+	Trail(const HomingShot& owner);
 	void SetHandle(int handle);
 	void Update(void);
 	void Draw(void);
