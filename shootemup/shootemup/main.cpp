@@ -72,6 +72,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	char keystate[256] = {};
 	char lastkeystate[256] = {};
+	bool isRight = false;
 	bool isDebugMode = false;
 	int skyy = 0;
 	int skyy2 = 0;
@@ -120,18 +121,20 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				if (!hs.isActive)
 				{
 					hs.isActive = true;
-					bool isRight = rand() % 2;
 					hs.pos = playerpos;
-					hs.vel = isRight ? Vector2(player_shot_speed, 0.0) :
-						Vector2(-player_shot_speed, 0.0);
+					hs.vel =isRight ? Vector2(player_shot_speed,1.0) :
+						Vector2(-player_shot_speed, 1.0);
+					/*hs.vel.Normalize();
+					hs.vel *= player_shot_speed;*/
 					hs.trail.Clear();
 
-					//Vector2(count==0?1.0f:-1.0f)
+					//Vector2(count==0?1.0f:-1.0f,1.0);
+					isRight = !isRight;
 					if (++count > 1)
 					{
 						break;
 					}
-					break;
+					
 				}
 			}
 		}
@@ -177,18 +180,29 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 					float cross = Cross(nShotvel, nToEnemyVec);
 				}
 
-				DrawCircleAA(hshot.pos.x, hshot.pos.y,
-					5.0f, 16, 0xff0000);
+				/*DrawCircleAA(hshot.pos.x, hshot.pos.y,
+					5.0f, 16, 0xff0000);*/
 
-				if (hshot.pos.x < -10 || 650 < hshot.pos.x ||
+				/*if (hshot.pos.x < -10 || 650 < hshot.pos.x ||
 					hshot.pos.y < -10 || 490 < hshot.pos.y)
 				{
 					hshot.isActive = false;
-				}
-				if (IsHit(hshot.pos, 5.0f,enemypos,3))
+				}*/
+
+				if ((enemypos - hshot.pos).SQMagnitude() < 900.0f)
 				{
 					hshot.isActive = false;
 				}
+
+				if (hshot.pos.x+16 < 0 || 640 < hshot.pos.x-16 ||
+					hshot.pos.y+24 <0 || 480 < hshot.pos.y-24)
+				{
+					hshot.isActive = false;
+				}
+				/*if (IsHit(hshot.pos, 5.0f,enemypos,3))
+				{
+					hshot.isActive = false;
+				}*/
 
 			}
 		}
@@ -230,6 +244,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 				//’e‚Ì–{‘Ì(“–‚½‚è”»’è)
 				DrawCircle(b.pos.x, b.pos.y, bulletRadius, 0x0000ff, false, 3);
 			}
+
+			//“G‚ÉÚG
+		//	if(())
 			//’e‚ðŽE‚·
 			if (b.pos.x + 16 < 0 || b.pos.x - 16 > 640 ||
 				b.pos.y + 24 < 0 || b.pos.y - 24 > 480) {

@@ -28,14 +28,15 @@ void Trail::Draw(void)
 {
 	float thickness = 5.0f;
 	auto lastPos = owner_.pos;
-	float div = 1.0f / static_cast<float>(history_.push_back);
+	if (history_.empty())return;
+	float div = 1.0f / static_cast<float>(history_.size());
 	float u = 0.0f;
 
 	for (const auto& pos : history_)
 	{
-		if (pos ==lastPos)continue;
+		if (lastPos==pos)continue;
 
-		auto v = lastPos-pos;
+		auto v = pos-lastPos;
 		v.Normalize();
 		v = Vector2(-v.y, v.x);
 
@@ -44,13 +45,14 @@ void Trail::Draw(void)
 		auto p3 = pos-v*16;
 		auto p4 = lastPos - v * 16;
 
-		DrawRectGraph(
-			p1.x,
-			 p2.y,
-			p3.x, 
-			 p4.y,
-			u*256.0,
-			div*256,64,handle_,true);
+		DrawRectModiGraph(
+			p1.x, p1.y,
+			p2.x, p2.y,
+			p3.x, p3.y,
+			p4.x, p4.y,
+			u*256,0,
+			div*256,64,
+			handle_,true);
 
 		u += div;
 

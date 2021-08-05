@@ -15,6 +15,12 @@ struct Vector2 {
 	///ベクトルの大きさを返します
 	float Magnitude()const;
 	
+	/// <summary>
+	/// ベクトルの大きさの2乗を返す(内部でSQRTしない)
+	/// </summary>
+	/// <returns>ベクトルの大きさの2乗</returns>
+	float SQMagnitude()const;
+
 	///正規化(大きさを１に)します
 	void Normalize();
 
